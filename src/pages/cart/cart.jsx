@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { clearProductCart, delProductCart, getAddproduct, increaseProductCart, reduceProductCart } from '../../entities/reducerc/Products'
 import { Link } from 'react-router';
 
-const API = import.meta.env.VITE_API_URL;
+const API = "http://37.27.29.18:8002/Cart/get-products-from-cart";
 
 
 const Cart = () => {
@@ -14,8 +14,8 @@ const Cart = () => {
   }, [])
 
   let productsCart = useSelector((store) => store.products.productsCart)
-  let totalProducts = useSelector((store) => store.products.totalProducts)
-  let totalPrice = useSelector((store) => store.products.totalPrice)
+  let totalProducts = useSelector((store) => store.products.Products)
+  let Price = useSelector((store) => store.products.Price)
   console.log(productsCart);
   
 
@@ -28,7 +28,7 @@ const Cart = () => {
             <th className='p-[15px] text-[#666666] text-[18px] font-[400] w-[35%] text-start'>Product</th>
             <th className='p-[15px] text-[#666666] text-[18px] font-[400] w-[20%] text-center'>Price</th>
             <th className='p-[15px] text-[#666666] text-[18px] font-[400] w-[20%] text-center'>Quantity</th>
-            <th className='p-[15px] text-[#666666] text-[18px] font-[400] w-[13%] text-start'>Subtotal</th>
+            <th className='p-[15px] text-[#666666] text-[18px] font-[400] w-[13%] text-start'>Sub</th>
           </tr>
         </thead>
         <tbody>
@@ -115,10 +115,10 @@ const Cart = () => {
           <button className='text-center border-[1px] text-[18px] font-[500] text-[#DB4444] border-[#DB4444] rounded-[5px] w-[26%] py-[10px]'>Apply</button>
         </div>
         <div className='w-[100%] md:w-[35%] mb-[30px] gap-y-[20px] flex flex-col p-[25px] border-[1px] border-[#000] rounded-[5px]'>
-          <p className='font-[600] text-[20px]'>Cart Total</p>
+          <p className='font-[600] text-[20px]'>Cart </p>
           <div className='flex flex-row justify-between'>
-            <p>Subtotal:</p>
-            <p>${totalPrice}</p>
+            <p>Sub:</p>
+            <p>${Price}</p>
           </div>
           <div className='flex flex-row justify-between'>
             <p>Shipping:</p>
@@ -126,8 +126,8 @@ const Cart = () => {
           </div>
           <hr />
           <div className='flex flex-row justify-between'>
-            <p className='text-[20px] font-[600]'>Total:</p>
-            <p className='text-[20px] font-[600]'>${totalPrice}</p>
+            <p className='text-[20px] font-[600]'>:</p>
+            <p className='text-[20px] font-[600]'>${Price}</p>
           </div>
           <Link to={"/checkout"} className='w-[70%] text-center m-auto p-[10px] bg-[#DB4444] text-[#fff] rounded-[5px]'>Procees to checkout</Link>
         </div>

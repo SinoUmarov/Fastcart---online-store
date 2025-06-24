@@ -34,18 +34,22 @@ export const addToCart = createAsyncThunk("cart/addToCart", async (id, { dispatc
     }
 })
 
-export const getAddproduct = createAsyncThunk('counter/getAddproduct', async () => {
-    try {
-        let { data } = await axios.get(`${API}/Cart/get-products-from-cart`,
-            {
-                headers: { "Authorization": `Bearer ${token}` }
-            }
-        )
-        return data.data
-    } catch (error) {
-        console.error(error);
-    }
-})
+export const getAddproduct = createAsyncThunk('counter/getAddproduct', async (_, { rejectWithValue }) => {
+  try {
+    const token = localStorage.getItem("Token");
+    if (!token) return rejectWithValue("No token found");
+
+    const { data } = await axios.get(`${API}/Cart/get-products-from-cart`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return data.data;
+  } catch (error) {
+    console.error(error);
+    return rejectWithValue(error.response?.data || error.message);
+  }
+});
+
 
 export const delProductCart = createAsyncThunk('cart/delProduct', async (id, { dispatch }) => {
     try {
@@ -132,7 +136,7 @@ export const getById = createAsyncThunk("products/getById", async (id) => {
 
 export const getCategories = createAsyncThunk("products/getCategories", async () => {
     try {
-        let { data } = await axios.get(`${API}/Category/get-categories`)
+        let  {data}  = await axios.get(`${API}/Category/get-categories`)
         return data.data
     } catch (error) {
         console.error(error);
@@ -241,48 +245,61 @@ export const productsData = createSlice({
             state.checkout = ""
         }
     },
-    extraReducers: (builder) => {
-        builder.addCase(getProducts.fulfilled, (state, action) => {
-        if (Array.isArray(action.payload)) {
-          state.products = action.payload;
-        } else if (Array.isArray(action.payload.products)) {
-          state.products = action.payload.products;
-        } else {
-          state.products = [];
-        }
-      })
-        builder.addCase(loginToAccount.fulfilled, (state, actions) => {
-            localStorage.setItem("Token", actions.payload)
-        })
-        builder.addCase(userInfo.fulfilled, (state, actions) => {
-            state.infoUser = actions.payload
-        })
-        builder.addCase(getById.fulfilled, (state, actions) => {
-            state.infoById = actions.payload
-        })
-        builder.addCase(getAddproduct.fulfilled, (state, actions) => {
-            state.productsCart = actions.payload[0].productsInCart,
-                state.totalPrice = actions.payload[0].totalPrice,
-                state.totalProducts = actions.payload[0].totalProducts
-        })
-        builder.addCase(clearProductCart.fulfilled, (state, action) => {
-            state.checkout = action.payload;
-        });
+  extraReducers: (builder) => {
+  builder
+    .addCase(getProducts.fulfilled, (state, action) => {
+      if (Array.isArray(action.payload)) {
+        state.products = action.payload;
+      } else if (Array.isArray(action.payload.products)) {
+        state.products = action.payload.products;
+      } else {
+        state.products = [];
+      }
+    })
+    .addCase(loginToAccount.fulfilled, (state, actions) => {
+      localStorage.setItem("Token", actions.payload);
+    })
+    .addCase(userInfo.fulfilled, (state, actions) => {
+      state.infoUser = actions.payload;
+    })
+    .addCase(getById.fulfilled, (state, actions) => {
+      state.infoById = actions.payload;
+    })
+    .addCase(getAddproduct.fulfilled, (state, actions) => {
+      if (Array.isArray(actions.payload) && actions.payload.length > 0) {
+        state.productsCart = actions.payload[0]?.productsInCart || [];
+        state.totalPrice = actions.payload[0]?.totalPrice || 0;
+        state.totalProducts = actions.payload[0]?.totalProducts || 0;
+      } else {
+        state.productsCart = [];
+        state.totalPrice = 0;
+        state.totalProducts = 0;
+      }
+    })
+    .addCase(getAddproduct.rejected, (state, action) => {
+      console.error("Ошибка получения корзины:", action.payload || action.error);
+      state.productsCart = [];
+      state.totalPrice = 0;
+      state.totalProducts = 0;
+    })
+    .addCase(clearProductCart.fulfilled, (state, action) => {
+      state.checkout = action.payload;
+    })
+    .addCase(clearProductCart.rejected, (state) => {
+      state.checkout = "Failed";
+    })
+    .addCase(getCategories.fulfilled, (state, actions) => {
+      state.categories = actions.payload;
+    })
+    .addCase(getBrand.fulfilled, (state, actions) => {
+      state.brands = actions.payload;
+    });
+}
 
-        builder.addCase(clearProductCart.rejected, (state) => {
-            state.checkout = "Failed";
-        });
-        builder.addCase(getCategories.fulfilled, (state, actions) => {
-            state.categories = actions.payload
-        })
-        builder.addCase(getBrand.fulfilled, (state, actions) => {
-            state.brands = actions.payload
-        })
-        // builder.addCase(filterProducts.fulfilled, (state, actions) => {
-        //     state.products = actions.payload.products
-        // })
-    }
 })
 
 export const { logOut, openModal, closeModal, addToWishlist, changePrice, filterFunc, changeBrandId, changeCategory, changeSearch } = productsData.actions
 export default productsData.reducer
+
+
+

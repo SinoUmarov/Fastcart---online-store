@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeBrandId, changeCategory, changePrice, getBrand, getCategories, getProducts } from '../../entities/reducerc/Products'
 import { Card } from '../lazy/lazy'
@@ -16,7 +16,7 @@ import Loading from '../../shared/components/loading/loading'
 
 
 const API = import.meta.env.VITE_API_URL
-
+const api="http://37.27.29.18:8002"
 const Products = () => {
   const categories = useSelector((store) => store.products.categories)
   const brands = useSelector((store) => store.products.brands)
@@ -35,7 +35,6 @@ const Products = () => {
   }, [])
 
   function filter() {
-    console.log("hello");
 
     const params = {};
     if (min) params.MinPrice = min;
@@ -43,10 +42,10 @@ const Products = () => {
     if (selectedBrand) params.BrandId = selectedBrand;
     if (selectedCategory) params.CategoryId = selectedCategory;
 
-    // 2) сериализовать в строку "MinPrice=10&MaxPrice=100&BrandId=5"
+   
     const queryString = new URLSearchParams(params).toString();
 
-    // 3) использовать в запросе
+   
     dispatch(getProducts(queryString));
   }
 
@@ -74,13 +73,13 @@ const Products = () => {
               <AccordionItem value="item-1">
                 <AccordionTrigger><p className='text-[16px] font-[600]'>Category</p></AccordionTrigger>
                 <AccordionContent>
-                  {categories.map((el) => (
+                  {categories?.map((el) => (
                     <div key={el.id} className='flex gap-[10px]'>
                       <input type="radio"
                         id={`category-${el.id}`}
                         name="category"
                         value={el.id}
-                        onChange={(e) => {
+                        onChange={(el) => {
                           dispatch(changeCategory(el.id))
                         }}
                       />
@@ -95,13 +94,13 @@ const Products = () => {
               <AccordionItem value="item-1">
                 <AccordionTrigger><p className='text-[16px] font-[600]'>Brands</p></AccordionTrigger>
                 <AccordionContent>
-                  {brands.map((el) => (
+                  {brands?.map((el) => (
                     <div key={el.id} className='flex gap-[10px]'>
                       <input type="radio"
                         id={`brand-${el.id}`}
                         name="brand"
                         value={el.id}
-                        onChange={(e) => {
+                        onChange={(el) => {
                           dispatch(changeBrandId(el.id))
                         }}
                       />
@@ -261,7 +260,7 @@ const Products = () => {
               products?.map((el) => (
                 <div className='w-[100%] md:w-[33%]' key={el.id}>
                   <Card
-                    img={`${API}/images/${el.image}`}
+                    img={`${api}/images/${el.image}`}
                     name={el.productName}
                     price={el.price}
                     hasDiscount={el.hasDiscount}
