@@ -60,7 +60,7 @@ const Info = () => {
               freeMode={true}
               watchSlidesProgress={true}
               modules={[FreeMode, Thumbs]}
-              className="mySwiper w-full md:w-[20%]"
+              className="mySwiper w-full md:w-[20%]  "
             >
               {product?.images?.map((el) => (
                 <SwiperSlide key={`thumb-${el.id}`} className="w-full bg-[#F5F5F5]">
