@@ -13,7 +13,7 @@ const Login = () => {
       dispatch(loginToAccount({userName:userName, password:userPassword}))
     }
 
-   return (
+   return ( 
      <div className='flex justify-center items-center h-[90vh]'>
        <div className='flex w-[90%] flex-col gap-[10px] p-[10px] md:w-[28%] m-auto'>
          <h1 className='text-[36px] font-[500]'>Log in to Exclusive</h1>
