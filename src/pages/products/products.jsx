@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { changeBrandId, changeCategory, changePrice, getBrand, getCategories, getProducts } from '../../entities/reducerc/Products'
 import { Card } from '../lazy/lazy'
@@ -35,7 +35,7 @@ const Products = () => {
   }, [])
 
   function filter() {
-    console.log("hello");
+   
 
     const params = {};
     if (min) params.MinPrice = min;
@@ -43,10 +43,10 @@ const Products = () => {
     if (selectedBrand) params.BrandId = selectedBrand;
     if (selectedCategory) params.CategoryId = selectedCategory;
 
-    // 2) сериализовать в строку "MinPrice=10&MaxPrice=100&BrandId=5"
+   
     const queryString = new URLSearchParams(params).toString();
 
-    // 3) использовать в запросе
+
     dispatch(getProducts(queryString));
   }
 
@@ -80,7 +80,7 @@ const Products = () => {
                         id={`category-${el.id}`}
                         name="category"
                         value={el.id}
-                        onChange={(e) => {
+                        onChange={(el) => {
                           dispatch(changeCategory(el.id))
                         }}
                       />
@@ -101,7 +101,7 @@ const Products = () => {
                         id={`brand-${el.id}`}
                         name="brand"
                         value={el.id}
-                        onChange={(e) => {
+                        onChange={(el) => {
                           dispatch(changeBrandId(el.id))
                         }}
                       />
