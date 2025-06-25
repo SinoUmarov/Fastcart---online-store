@@ -1,0 +1,26 @@
+#countdown {
+  display: flex;
+  align-items: center;
+  font-family: sans-serif;
+  font-size: 24px;
+  gap: 10px;
+}
+
+#countdown div {
+  text-align: center;
+}
+
+#countdown span {
+  font-weight: bold;
+  font-size: 28px;
+}
+
+.colon {
+  color: #e88c8c;
+  font-size: 30px;
+  margin: 0 5px;
+}
+
+/* ul{
+  list-style: none;
+} */

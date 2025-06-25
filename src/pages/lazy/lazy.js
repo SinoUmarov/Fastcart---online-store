@@ -1,0 +1,17 @@
+import { lazy } from "react";
+
+export const Layout = lazy(()=>import('../layout/layout.jsx'))
+export const Home = lazy(()=>import('../home/home.jsx'))
+export const Contacts = lazy(()=>import('../contacts/contacts.jsx'))
+export const About = lazy(()=>import('../about/about.jsx'))
+export const SignUp = lazy(()=>import('../sign/signUp.jsx'))
+export const Login = lazy(()=>import('../login/login.jsx'))
+export const Error = lazy(()=>import('../error/error.jsx'))
+export const Cart = lazy(()=>import("../cart/cart.jsx"))
+export const Account = lazy(()=>import("../account/account.jsx"))
+export const Info = lazy(()=>import("../info/info.jsx"))
+export const Wishlist = lazy(()=>import('../wishlist/wishlist.jsx'))
+export const Products = lazy(()=>import("../products/products.jsx"))
+export const Card = lazy(()=>import("../../shared/components/card/card.jsx"))
+export const Timer = lazy(()=>import("../../shared/components/timer/timer.jsx"))
+export const Checkout = lazy(()=>import("../checkout/checkout.jsx"))
