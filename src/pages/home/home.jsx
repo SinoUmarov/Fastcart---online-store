@@ -22,6 +22,7 @@ import gucci from '../../shared/imgs/652e82cd70aa6522dd785109a455904c (1).png'
 import frame from '../../shared/imgs/Frame 707.png'
 import ladmoda from '../../shared/imgs/attractive-woman-wearing-hat-posing-black-background 1.png'
 import CountdownTimer from '../../CountdownTimer/CountdownTimer'
+import Chat from '../../Chat'
 
 const Home = () => {
 	const products = useSelector(store => store.products.products)
@@ -482,6 +483,7 @@ const Home = () => {
 					<p className='tex-[14px] font-[400]'>We reurn money within 30 days</p>
 				</div>
 			</div>
+			  <Chat />
 		</div>
 	)
 }

@@ -110,6 +110,7 @@ export const loginToAccount = createAsyncThunk("cretaeAccount/login", async (use
 })
 
 export const userInfo = createAsyncThunk("user/getUserInfo", async () => {
+   
     let decode = jwtDecode(token)
     try {
         let { data } = await axios.get(`${API}/UserProfile/get-user-profile-by-id?id=${decode.sid}`, {
@@ -139,7 +140,7 @@ export const getCategories = createAsyncThunk("products/getCategories", async ()
     }
 })
 
-export const getBrand = createAsyncThunk("products/getBrands", async () => {
+export const getBrand = createAsyncThunk("products/getBrand", async () => {
     try {
         let { data } = await axios.get(`${API}/Brand/get-brands`)
         return data.data
