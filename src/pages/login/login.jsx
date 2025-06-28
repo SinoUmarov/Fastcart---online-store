@@ -7,6 +7,7 @@ const Login = () => {
     const [userName, setUserName] = useState("")
     const [userPassword, setUserPassword] = useState("")
     let dispatch = useDispatch()
+    // eslint-disable-next-line no-unused-vars
     const error = useSelector((store) => store.products.error) 
     const navigate = useNavigate()
     function logToAccount(){

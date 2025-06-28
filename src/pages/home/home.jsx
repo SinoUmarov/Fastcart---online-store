@@ -480,7 +480,7 @@ const Home = () => {
 				<div className='w-[100%] p-[10px] m-auto flex flex-col gap-y-[10px] items-center md:w-[30%]'>
 					<img className='w-[20%]' src={Services8} alt='' />
 					<h1 className='font-[600] text-[20px]'>MONEY BACK GUARANTEE</h1>
-					<p className='tex-[14px] font-[400]'>We reurn money within 30 days</p>
+					<p className='text-[14px] font-[400]'>We reurn money within 30 days</p>
 				</div>
 			</div>
 			  <Chat />
