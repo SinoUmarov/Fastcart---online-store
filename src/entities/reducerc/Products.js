@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import  toast  from "react-hot-toast";
+import  {toast}  from "react-hot-toast";
 
 let token = localStorage.getItem("Token");
 
@@ -14,7 +14,7 @@ export const getProducts = createAsyncThunk(
       const { data } = await axios.get(`${API}/Product/get-products?${queryString}`);
       return data.data;
     } catch (error) {
-      toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+      toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
       return rejectWithValue(error.response?.data || error.message);
     }
   }
@@ -30,7 +30,7 @@ export const addToCart = createAsyncThunk("cart/addToCart", async (id, { dispatc
     });
     dispatch(getAddproduct());
   } catch (error) {
-    toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+    toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
   }
 });
 
@@ -43,7 +43,7 @@ export const getAddproduct = createAsyncThunk('counter/getAddproduct', async () 
     );
     return data.data;
   } catch (error) {
-    toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+    toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
   }
 });
 
@@ -54,7 +54,7 @@ export const delProductCart = createAsyncThunk('cart/delProduct', async (id, { d
     });
     dispatch(getAddproduct());
   } catch (error) {
-    toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+    toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
   }
 });
 
@@ -66,7 +66,7 @@ export const clearProductCart = createAsyncThunk('cart/clearProduct', async (_, 
     dispatch(getAddproduct());
     return data.data;
   } catch (error) {
-    toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+    toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
   }
 });
 
@@ -77,7 +77,7 @@ export const increaseProductCart = createAsyncThunk('cart/increaseProduct', asyn
     });
     dispatch(getAddproduct());
   } catch (error) {
-    toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+    toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
   }
 });
 
@@ -88,7 +88,7 @@ export const reduceProductCart = createAsyncThunk('cart/reduceProduct', async (i
     });
     dispatch(getAddproduct());
   } catch (error) {
-    toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+    toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
   }
 });
 
@@ -96,7 +96,7 @@ export const cretaeAccount = createAsyncThunk('cretaeAccount/signUp', async (use
   try {
     await axios.post(`${API}/Account/register`, user);
   } catch (error) {
-    toast.error(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
+    toast(`(${error.response?.status || "?"}) ${error.response?.data?.message || error.message}`);
   }
 });
 

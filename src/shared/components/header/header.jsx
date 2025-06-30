@@ -1,362 +1,522 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
-
-import logo from '../../imgs/Group 1116606595.png'
-import { Link, NavLink } from 'react-router'
+import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-	logOut,
-	getAddproduct,
-	openModal,
+  logOut,
+  getAddproduct,
+  openModal,
 } from '../../../entities/reducerc/Products'
+import logo from "../../imgs/Group 1116606595.png"
+const API = import.meta.env.VITE_API_URL
 
 const Header = () => {
-	const [modal, setModal] = useState(false)
-	const [accModal, setAccModal] = useState(false)
-	let totalProducts = useSelector(store => store.products.totalProducts)
-	let wishlist = useSelector(store => store.products.wishlist)
-	let Modal = useSelector(store => store.products.modal)
-	const userIfo = useSelector(store => store.products.infoUser)
-	let navigate = useNavigate()
+  const [modal, setModal] = useState(false)
+  const [accModal, setAccModal] = useState(false)
+  const totalProducts = useSelector(store => store.products.totalProducts)
+  const wishlist = useSelector(store => store.products.wishlist)
+  const Modal = useSelector(store => store.products.modal)
+  const userInfo = useSelector(store => store.products.infoUser)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
 
-	let dispatch = useDispatch()
+  function check(path) {
+    const token = localStorage.getItem('Token')
+    if (token) {
+      navigate(path)
+    } else {
+      dispatch(openModal())
+    }
+  }
 
-	function check(path) {
-		let token = localStorage.getItem('Token')
-		if (token) {
-			navigate(path)
-		} else {
-			dispatch(openModal())
-		}
-	}
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const token = localStorage.getItem('Token')
+      if (token) {
+        localStorage.removeItem('Token')
+      } else {
+        clearInterval(interval)
+      }
+    }, 3600000)
+    return () => clearInterval(interval)
+  }, [])
 
-	useEffect(() => {
-		setInterval(() => {
-			let token = localStorage.getItem('Token')
-			if (token) {
-				localStorage.removeItem('Token')
-			} else {
-				// eslint-disable-next-line no-undef
-				clearInterval(interval)
-			}
-		}, 3600000)
-	}, [])
+  useEffect(() => {
+    dispatch(getAddproduct())
+  }, [dispatch])
 
-	useEffect(() => {
-		dispatch(getAddproduct())
-	}, [])
+  return (
+    <header className="sticky top-0 z-50 bg-white shadow-sm backdrop-blur-sm bg-opacity-90">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
+          {/* Logo and mobile menu button */}
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setModal(!modal)}
+              className="md:hidden text-gray-700 hover:text-gray-900"
+              aria-label="Open menu"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
+            <Link to="/" className="flex items-center">
+              <img 
+                className="hidden md:block h-8 w-auto" 
+                src={logo} 
+                alt="Exclusive" 
+              />
+              <span className="md:hidden text-xl font-bold text-gray-900">Exclusive</span>
+            </Link>
+          </div>
 
-	return (
-		<div className='flex flex-row justify-between w-[100%] px-[5%] m-auto items-center h-[10vh] border-b-[0.2px] border-[#ccc] border-solid'>
-			<div className='flex flex-row gap-[20px] items-center'>
-				<img className='hidden md:block w-[200px]' src={logo} alt='' />
-				<svg
-					onClick={() => setModal(!modal)}
-					xmlns='http://www.w3.org/2000/svg'
-					fill='none'
-					viewBox='0 0 24 24'
-					strokeWidth={1.5}
-					stroke='currentColor'
-					className='md:hidden size-8'
-				>
-					<path
-						strokeLinecap='round'
-						strokeLinejoin='round'
-						d='M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5'
-					/>
-				</svg>
-				<h1 className='md:hidden font-[700] text-[24px]'>Exclusive</h1>
-			</div>
-			{Modal && (
-				<div
-					onClick={() => dispatch(openModal())}
-					className='fixed top-0 bottom-0 z-20 left-0 w-full h-screen bg-[#000000a1] flex justify-center items-center'
-				>
-					<div
-						onClick={e => e.stopPropagation()}
-						className='bg-white w-[90%] sm:w-[70%] md:w-[30%] p-6 rounded-[10px] flex flex-col gap-y-5 shadow-lg animate-fadeIn'
-					>
-						<h1 className='text-[24px] font-semibold text-center'>
-							You don’t have an account
-						</h1>
+          {/* Navigation links - desktop */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link 
+              to="/" 
+              className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium"
+              activeClassName="text-red-500"
+            >
+              Home
+            </Link>
+            <Link 
+              to="/contact" 
+              className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium"
+              activeClassName="text-red-500"
+            >
+              Contact
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium"
+              activeClassName="text-red-500"
+            >
+              About
+            </Link>
+            <Link 
+              to="/signUp" 
+              className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium"
+              activeClassName="text-red-500"
+            >
+              Sign Up
+            </Link>
+          </nav>
 
-						<button
-							onClick={() => {
-								dispatch(openModal())
-								navigate('/login')
-							}}
-							className='bg-[#DB4444] hover:bg-[#c03b3b] focus:ring-2 focus:ring-red-400 transition duration-300 ease-in-out text-white px-5 py-2 rounded-[5px] flex items-center justify-center gap-2'
-						>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								className='h-5 w-5'
-								viewBox='0 0 20 20'
-								fill='currentColor'
-							>
-								<path
-									fillRule='evenodd'
-									d='M3 10a1 1 0 011-1h9.586l-3.293-3.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 11H4a1 1 0 01-1-1z'
-									clipRule='evenodd'
-								/>
-							</svg>
-							Go To Login
-						</button>
+         
+          <div className="flex items-center gap-4 md:gap-6">
+            
+            <div className="hidden md:flex relative w-64">
+              <input
+                type="search"
+                placeholder="What are you looking for?"
+                className="w-full pl-4 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              />
+              <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-red-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </button>
+            </div>
 
-						<button
-							onClick={() => dispatch(openModal())}
-							className='bg-green-700 hover:bg-green-800 focus:ring-2 focus:ring-green-500 transition duration-300 ease-in-out text-white px-5 py-2 rounded-[5px] flex items-center justify-center gap-2'
-						>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								className='h-5 w-5'
-								viewBox='0 0 20 20'
-								fill='currentColor'
-							>
-								<path
-									fillRule='evenodd'
-									d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.54-10.46a.75.75 0 10-1.08-1.04L10 8.94 7.54 6.5a.75.75 0 00-1.08 1.04L8.94 10l-2.48 2.46a.75.75 0 101.08 1.04L10 11.06l2.46 2.48a.75.75 0 101.08-1.04L11.06 10l2.48-2.46z'
-									clipRule='evenodd'
-								/>
-							</svg>
-							Close
-						</button>
-					</div>
-				</div>
-			)}
+          
+            <Link 
+              to="/wishlist" 
+              className="relative hidden md:block text-gray-700 hover:text-red-500 transition-colors duration-200"
+            >
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {wishlist.length}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+            </Link>
 
-			<div className='hidden md:flex flex-row gap-[30px]'>
-				<Link className='text-[20px] font-[400]' to={'/'}>
-					Home
-				</Link>
-				<Link className='text-[20px] font-[400]' to={'/contact'}>
-					Contact
-				</Link>
-				<Link className='text-[20px] font-[400]' to={'/about'}>
-					About
-				</Link>
-				<Link className='text-[20px] font-[400]' to={'/signUp'}>
-					Sign Up
-				</Link>
-			</div>
-			<div className='flex flex-row w-[23%] md:w-[35%] items-center justify-between gap-[20px]'>
-				<div className='hidden md:flex justify-between w-[80%] items-center bg-[#F5F5F5] rounded-[5px] px-[10px] py-[8px]'>
-					<input
-						className='w-[90%] outline-0'
-						type='search'
-						placeholder='What are you looking for?'
-					/>
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						fill='none'
-						viewBox='0 0 24 24'
-						strokeWidth={1.5}
-						stroke='currentColor'
-						className='size-7'
-					>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							d='m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z'
-						/>
-					</svg>
-				</div>
-				<Link className='hidden relative md:block' to={'/wishlist'}>
-					<span className='absolute bg-[#DB4444] text-[#fff] z-[10] rounded-[50%] text-[11px] top-[2%] left-[60%] py-[0px] px-[5px]'>
-						{wishlist.length}
-					</span>
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						fill='none'
-						viewBox='0 0 24 24'
-						strokeWidth={1.5}
-						stroke='currentColor'
-						className='size-7'
-					>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z'
-						/>
-					</svg>
-				</Link>
-				<button
-					onClick={() => check('/cart')}
-					className='flex flex-row relative items-center'
-				>
-					<span className='absolute bg-[#DB4444] text-[#fff] z-[10] rounded-[50%] text-[11px] top-[2%] left-[60%] py-[0px] px-[5px]'>
-						{totalProducts}
-					</span>
-					<svg
-						xmlns='http://www.w3.org/2000/svg'
-						fill='none'
-						viewBox='0 0 24 24'
-						strokeWidth={1.5}
-						stroke='currentColor'
-						className='size-7'
-					>
-						<path
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							d='M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z'
-						/>
-					</svg>
-				</button>
-				<svg
-					onClick={() => setAccModal(!accModal)}
-					style={{
-						background: accModal ? '#DB4444' : '#fff',
-						color: accModal ? '#fff' : '#000',
-					}}
-					xmlns='http://www.w3.org/2000/svg'
-					fill='none'
-					viewBox='0 0 24 24'
-					strokeWidth={1.5}
-					stroke='currentColor'
-					className='size-13 py-[0px] px-[8px] h-[40px] rounded-[50%]'
-				>
-					<path
-						strokeLinecap='round'
-						strokeLinejoin='round'
-						d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'
-					/>
-				</svg>
-			</div>
-			{modal && (
-				<div
-					onClick={() => setModal(!modal)}
-					className='w-[100%] left-0 bottom-0 h-[100vh] fixed z-10 bg-[#0000007a]'
-				>
-					<div className='flex h-[100vh] w-[70%] bg-[#fff] flex-col'>
-						<img className='w-[70%] p-[10px]' src={logo} alt='' />
-						<Link
-							className='text-[22px] py-[10px] px-[30px] hover:bg-[#ccc] font-[600]'
-							to={'/'}
-						>
-							Home
-						</Link>
-						<Link
-							className='text-[22px] py-[10px] px-[30px] hover:bg-[#ccc] font-[600]'
-							to={'/contact'}
-						>
-							Contact
-						</Link>
-						<Link
-							className='text-[22px] py-[10px] px-[30px] hover:bg-[#ccc] font-[600]'
-							to={'/about'}
-						>
-							About
-						</Link>
-						<Link
-							className='text-[22px] py-[10px] px-[30px] hover:bg-[#ccc] font-[600]'
-							to={'/signUp'}
-						>
-							Sign Up
-						</Link>
-					</div>
-				</div>
-			)}
-			{accModal && (
-				<div className='absolute text-[#fff] md:w-[18%] p-[20px] flex flex-col gap-y-[20px] w-[55%] z-10 h-auto rounded-[5px] right-[5%] top-[10%] bg-[#3f3f3fef]'>
-					{userIfo && (
-						<div>
-							<h2 className='font-bold'>name:{userIfo.userName}</h2>
-							<h2 className='font-bold'>email:{userIfo.email}</h2>
-						</div>
-					)}
-					<button
-						onClick={() => {
-							setAccModal(!accModal), check('/account')
-						}}
-						className='flex flex-row items-center gap-[20px]'
-					>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							fill='none'
-							viewBox='0 0 24 24'
-							strokeWidth={1.5}
-							stroke='currentColor'
-							className='size-7'
-						>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z'
-							/>
-						</svg>
-						<h1 className='text-[20px] font-[500]'>Account</h1>
-					</button>
-					<button
-						onClick={() => {
-							setAccModal(!accModal)
-							check('/checkout')
-						}}
-						className='flex flex-row items-center gap-[20px]'
-					>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							fill='none'
-							viewBox='0 0 24 24'
-							strokeWidth={1.5}
-							stroke='currentColor'
-							className='size-6'
-						>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z'
-							/>
-						</svg>
-						<h1 className='text-[20px] font-[500]'>My Order</h1>
-					</button>
-					<Link
-						to={'/wishlist'}
-						onClick={() => setAccModal(!accModal)}
-						className='flex flex-row items-center gap-[20px] md:hidden'
-					>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							fill='none'
-							viewBox='0 0 24 24'
-							strokeWidth={1.5}
-							stroke='currentColor'
-							className='size-6'
-						>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z'
-							/>
-						</svg>
-						<h1 className='text-[20px] font-[500]'>Wishlist</h1>
-					</Link>
-					<button
-						onClick={() => {
-							setAccModal(!accModal)
-							dispatch(logOut())
-							navigate('/')
-						}}
-						className='flex flex-row items-center gap-[20px]'
-					>
-						<svg
-							xmlns='http://www.w3.org/2000/svg'
-							fill='none'
-							viewBox='0 0 24 24'
-							strokeWidth={1.5}
-							stroke='currentColor'
-							className='size-6'
-						>
-							<path
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								d='M8.25 9V5.25A2.25 2.25 0 0 1 10.5 3h6a2.25 2.25 0 0 1 2.25 2.25v13.5A2.25 2.25 0 0 1 16.5 21h-6a2.25 2.25 0 0 1-2.25-2.25V15m-3 0-3-3m0 0 3-3m-3 3H15'
-							/>
-						</svg>
-						<h1 className='text-[20px] font-[500]'>Logout</h1>
-					</button>
-				</div>
-			)}
-		</div>
-	)
+           
+            <button
+              onClick={() => check('/cart')}
+              className="relative text-gray-700 hover:text-red-500 transition-colors duration-200"
+            >
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                {totalProducts}
+              </span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                />
+              </svg>
+            </button>
+
+           
+            <div className="relative">
+              <button
+                onClick={() => setAccModal(!accModal)}
+                className={`flex items-center justify-center h-10 w-10 rounded-full transition-colors duration-200 ${
+                  accModal ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                aria-label="Account"
+              >
+               <img 
+                          src={`${API}/images/${userInfo?.image}`} 
+                          alt="Profile" 
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+              </button>
+
+              {accModal && (
+                <div className="absolute right-0 mt-2 w-72 bg-white rounded-lg shadow-xl overflow-hidden z-50 border border-gray-200">
+                  {userInfo && (
+                    <div className="p-4 border-b border-gray-200 bg-gray-50">
+                      <div className="flex items-center space-x-3">
+                        <img 
+                          src={`${API}/images/${userInfo.image}`} 
+                          alt="Profile" 
+                          className="h-10 w-10 rounded-full object-cover"
+                        />
+                        <div>
+                          <p className="font-medium text-gray-900">{userInfo.userName}</p>
+                          <p className="text-sm text-gray-500">{userInfo.email}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="py-1">
+                    <button
+                      onClick={() => {
+                        setAccModal(false)
+                        check('/account')
+                      }}
+                      className="flex items-center w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-3 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      Account Settings
+                    </button>
+                    
+                    <button
+                      onClick={() => {
+                        setAccModal(false)
+                        check('/checkout')
+                      }}
+                      className="flex items-center w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-3 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                      My Orders
+                    </button>
+                    
+                    <Link
+                      to="/wishlist"
+                      onClick={() => setAccModal(false)}
+                      className="md:hidden flex items-center w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-3 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                      Wishlist
+                    </Link>
+                    
+                    <button
+                      onClick={() => {
+                        setAccModal(false)
+                        dispatch(logOut())
+                        navigate('/')
+                      }}
+                      className="flex items-center w-full px-4 py-3 text-left text-gray-700 hover:bg-gray-100 transition-colors duration-200"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-3 text-gray-500"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                        />
+                      </svg>
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+      {modal && (
+        <div className="md:hidden fixed inset-0 z-40">
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50" 
+            onClick={() => setModal(false)}
+          ></div>
+          <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out">
+            <div className="flex flex-col h-full p-4">
+              <div className="flex items-center justify-between mb-8">
+                <img className="h-8" src={logo} alt="Exclusive" />
+                <button 
+                  onClick={() => setModal(false)}
+                  className="text-gray-500 hover:text-gray-700"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              
+              <nav className="flex-1 space-y-2">
+                <Link
+                  to="/"
+                  onClick={() => setModal(false)}
+                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 font-medium"
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/contact"
+                  onClick={() => setModal(false)}
+                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 font-medium"
+                >
+                  Contact
+                </Link>
+                <Link
+                  to="/about"
+                  onClick={() => setModal(false)}
+                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 font-medium"
+                >
+                  About
+                </Link>
+                <Link
+                  to="/signUp"
+                  onClick={() => setModal(false)}
+                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 font-medium"
+                >
+                  Sign Up
+                </Link>
+              </nav>
+              
+              <div className="mt-auto pt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between px-4">
+                  <div className="flex space-x-4">
+                    <Link 
+                      to="/wishlist" 
+                      onClick={() => setModal(false)}
+                      className="text-gray-700 hover:text-red-500"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                        />
+                      </svg>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setModal(false)
+                        check('/cart')
+                      }}
+                      className="text-gray-700 hover:text-red-500"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => setAccModal(!accModal)}
+                    className={`p-2 rounded-full ${
+                      accModal ? 'bg-red-500 text-white' : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Auth modal */}
+      {Modal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-xl p-6 max-w-sm w-full mx-4 shadow-xl transform transition-all">
+            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+              You don't have an account
+            </h2>
+            
+            <div className="space-y-3">
+              <button
+                onClick={() => {
+                  dispatch(openModal())
+                  navigate('/login')
+                }}
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>Go To Login</span>
+              </button>
+              
+              <button
+                onClick={() => dispatch(openModal())}
+                className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>Close</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
+  )
 }
 
 export default Header

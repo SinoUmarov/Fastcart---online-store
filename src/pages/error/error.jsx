@@ -1,13 +1,23 @@
-import React from 'react'
+import React from 'react';
+import { Link } from 'react-router-dom'; 
 
 const Error = () => {
   return (
-    <div className='text-center flex flex-col h-[90vh] gap-[40px] items-center justify-center'>
-        <h1 className='text-[72px] md:text-[110px] font-[500]'>404 Not Found</h1>
-        <p className='text-[16px] font-[400] w-[80%]'>Your visited page not found. You may go home page.</p>
-        <button className='bg-[#DB4444] text-[#fff] px-[30px] py-[10px] font-[500] rounded-[3px] text-[16px]'>Back to home page</button>
+    <div className="flex flex-col items-center justify-center h-screen text-center px-4 bg-white text-gray-800">
+      <h1 className="text-[80px] md:text-[120px] font-bold animate-bounce text-red-600">404</h1>
+      <h2 className="text-2xl md:text-3xl font-semibold mb-4">Page Not Found</h2>
+      <p className="text-base md:text-lg max-w-md text-gray-600 mb-8">
+        The page you're looking for doesn't exist or has been moved.  
+        Let’s get you back to the home page.
+      </p>
+      <Link
+        to="/"
+        className="inline-block bg-[#DB4444] hover:bg-[#c33a3a] text-white px-6 py-3 rounded-md font-medium transition duration-300"
+      >
+        Back to Home Page
+      </Link>
     </div>
-  )
-}
+  );
+};
 
-export default Error
+export default Error;
